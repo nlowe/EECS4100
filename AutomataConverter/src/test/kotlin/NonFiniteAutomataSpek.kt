@@ -1,13 +1,15 @@
 package AutomataConverter.Tests
 
-import AutomataConverter.toNonFiniteAutomata
+import AutomataConverter.NonFiniteAutomata
+import AutomataConverter.State
+import AutomataConverter.Transition
 import org.amshove.kluent.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.*
 
 object NonFiniteAutomataSpek: Spek({
     describe("Non-Finite Automata") {
-        on("Constructing a sample automata via string") {
+        given("the source of a valid NFA") {
             val nfaSource = """
 3
 ab
@@ -19,7 +21,7 @@ ab
 0 a 1
 1 b 2
 """.trim()
-            val nfa = nfaSource.toNonFiniteAutomata()
+            val nfa = NonFiniteAutomata.parse(nfaSource)
 
             it("Detects the correct cardinality") {
                 nfa.cardinality shouldBe 3
@@ -38,28 +40,56 @@ ab
                 nfa.startState shouldBe 0
             }
 
-            it("Detects all transitions") {
-                nfa.transitionMap.size shouldBe 4
+            describe("the transition map"){
+                it("contains exactly 4 transitions"){
+                    nfa.transitionMap.size shouldBe 4
+                }
 
-                nfa.transitionMap[0].from shouldBe 0
-                nfa.transitionMap[0].via  shouldBe 'a'
-                nfa.transitionMap[0].to   shouldBe 0
+                it("contains a transition from 0 to 0 via a"){
+                    nfa.transitionMap shouldContain Transition(State(0), 'a', State(0))
+                }
 
-                nfa.transitionMap[1].from shouldBe 0
-                nfa.transitionMap[1].via  shouldBe 'b'
-                nfa.transitionMap[1].to   shouldBe 0
+                it("contains a transition from 0 to 0 via b"){
+                    nfa.transitionMap shouldContain Transition(State(0), 'b', State(0))
+                }
 
-                nfa.transitionMap[2].from shouldBe 0
-                nfa.transitionMap[2].via  shouldBe 'a'
-                nfa.transitionMap[2].to   shouldBe 1
+                it("contains a transition from 0 to 1 via a"){
+                    nfa.transitionMap shouldContain Transition(State(0), 'a', State(1))
+                }
 
-                nfa.transitionMap[3].from shouldBe 1
-                nfa.transitionMap[3].via  shouldBe 'b'
-                nfa.transitionMap[3].to   shouldBe 2
+                it("contains a transition from 1 to 2 via b"){
+                    nfa.transitionMap shouldContain Transition(State(1), 'b', State(2))
+                }
             }
 
             it("Prints the correct representation") {
                 nfa.repr() shouldEqual nfaSource
+            }
+        }
+
+        given("The source of an NFA containing a transition via a string of more than one character") {
+            val nfaSource = """
+3
+ab
+1
+2
+0
+0 abc 0
+0 b 0
+0 a 1
+1 b 2
+""".trim()
+
+            it("Throws an IllegalStateException") {
+                try {
+                    NonFiniteAutomata.parse(nfaSource)
+                    kotlin.test.fail("Exception was not thrown")
+                }
+                catch(e: Exception)
+                {
+                    e shouldBeInstanceOf IllegalStateException::class.java
+                    e.message shouldEqual "Transition state must be composed of a single character (got abc)"
+                }
             }
         }
     }
