@@ -9,6 +9,19 @@
 
 .idea/
 *.iml
+.vscode/
+.vs/
+[Oo]bj/
+[Bb]in/
+
+# User-specific files
+**/*.suo
+**/*.user
+**/*.userosscache
+**/*.sln.docstates
+
+!tools/nuget.exe
+tools/
 
 # Gradle:
 .idea/gradle.xml
