@@ -3,6 +3,14 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
+Setup(ctx => 
+{
+    Information("Using dotnet core version: ");
+    StartProcess("dotnet", new ProcessSettings().WithArguments(a => 
+        a.Append("--version")
+    ));
+});
+
 Task("Clean")
     .Does(() =>
 {
