@@ -11,6 +11,15 @@ Setup(ctx =>
     ));
 });
 
+Task("Clean-Dist")
+    .Does(() => 
+{
+    if(DirectoryExists("./dist"))
+    {
+        DeleteDirectory("./dist", true);
+    }
+});
+
 Task("Clean")
     .Does(() =>
 {
@@ -44,6 +53,18 @@ Task("Test")
             Configuration = configuration
         });
     }
+});
+
+Task("Dist")
+    .IsDependentOn("Clean-Dist")
+    .IsDependentOn("Test")
+    .Does(() => 
+{
+    DotNetCorePublish("./src/AutomataConverter/AutomataConverter.csproj", new DotNetCorePublishSettings {
+        Framework = "netcoreapp1.0",
+        Configuration = configuration,
+        OutputDirectory = "./dist"
+    });
 });
 
 Task("Default")

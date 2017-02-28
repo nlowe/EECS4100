@@ -13,6 +13,7 @@
 .vs/
 [Oo]bj/
 [Bb]in/
+dist/
 
 # User-specific files
 **/*.suo
