@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AutomataConverter
 {
@@ -13,7 +14,7 @@ namespace AutomataConverter
 
         public static NonFiniteAutomata parse(string source)
         {
-            var lines = source.Trim().Split('\n');
+            var lines = new Regex("\\s+").Split(source.Trim());
 
             var i = 0;
             var cardinality = int.Parse(lines[i++]);
@@ -30,13 +31,14 @@ namespace AutomataConverter
             var transitionMap = new List<Transition>();
             while(i < lines.Length)
             {
-                var transition = lines[i++].Split(' ');
-                if(transition[1].Length > 1) throw new ArgumentOutOfRangeException("via", "Transition string cannot be more than one character");
-                
-                var from = int.Parse(transition[0]);
-                var to = int.Parse(transition[2]);
+                var from = int.Parse(lines[i++]);
+                var via = lines[i++];
 
-                transitionMap.Add(new Transition(from, transition[1][0], to));
+                if(via.Length > 1) throw new ArgumentOutOfRangeException("via", "Transition string cannot be more than one character");
+
+                var to = int.Parse(lines[i++]);
+
+                transitionMap.Add(new Transition(from, via[0], to));
             }
 
             return new NonFiniteAutomata(cardinality, validTokens, acceptingStates, startState, transitionMap.GroupBy(t => t.From).ToDictionary(k => k.Key, v => v.AsEnumerable()));

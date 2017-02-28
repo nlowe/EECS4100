@@ -33,8 +33,7 @@ namespace AutomataConverter
             return $@"
 {Cardinality}
 {ValidTokens}
-{AcceptingStates.Count()}
-{states}
+{AcceptingStates.Count()} {states}
 {StartState}
 {transitions}
 ".Trim();
