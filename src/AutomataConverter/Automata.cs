@@ -27,7 +27,7 @@ namespace AutomataConverter
 
         public override string ToString()
         {
-            var states = string.Join("\n", AcceptingStates);
+            var states = string.Join(" ", AcceptingStates);
             var transitions = string.Join("\n", TransitionMap.SelectMany(t => t.Value));
 
             return $@"
