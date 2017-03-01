@@ -39,8 +39,7 @@ Task("Build")
     .Does(() =>
 {
     DotNetCoreBuild("./EECS4100.sln", new DotNetCoreBuildSettings {
-        Configuration = configuration,
-        Framework = "netcoreapp1.1"
+        Configuration = configuration
     });
 });
 
@@ -62,7 +61,6 @@ Task("Dist")
     .Does(() => 
 {
     DotNetCorePublish("./src/AutomataConverter/AutomataConverter.csproj", new DotNetCorePublishSettings {
-        Framework = "netcoreapp1.1",
         Configuration = configuration,
         OutputDirectory = "./dist"
     });
