@@ -66,7 +66,8 @@ ab
         [Fact]
         public void PrintsCorrectRepresentation()
         {
-            Assert.Equal(sut.Expected, sut.NFA.ToString());
+            // We support multiple platforms and I'm lazy
+            Assert.Equal(sut.Expected.NormalizeLineEndingsTo(LineEndingStyle.LF), sut.NFA.ToString().NormalizeLineEndingsTo(LineEndingStyle.LF));
         }
 
         [Fact]

@@ -19,20 +19,6 @@ ab
 1 b 2
 ".Trim();
 
-        public readonly string ExpectedDFA = @"
-3
-ab
-1
-2
-0
-0 a 1
-0 b 0
-1 a 1
-1 b 2
-2 a 1
-2 b 0
-".Trim();
-
         public DFAFixture()
         {
             NFA = NonFiniteAutomata.parse(NFASource);
