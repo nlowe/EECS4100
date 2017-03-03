@@ -5,15 +5,24 @@ using System.Text.RegularExpressions;
 
 namespace AutomataConverter
 {
-    public class NonFiniteAutomata : Automata
+    /// <summary>
+    /// A non-deterministic finite automata
+    /// </summary>
+    public class NonDeterministicFiniteAutomata : Automata
     {
-        public NonFiniteAutomata(int cardinality, string tokens, IEnumerable<int> acceptingStates, int startState, Dictionary<int, IEnumerable<Transition>> transitionMap)
+        public NonDeterministicFiniteAutomata(int cardinality, string tokens, IEnumerable<int> acceptingStates, int startState, Dictionary<int, IEnumerable<Transition>> transitionMap)
             : base(cardinality, tokens, acceptingStates, startState, transitionMap)
         {
         }
 
-        public static NonFiniteAutomata parse(string source)
+        /// <summary>
+        /// Construct an NFA from the specified string
+        /// </summary>
+        /// <param name="source">the string to parse</param>
+        /// <returns>a non-deterministic finite automata</returns>
+        public static NonDeterministicFiniteAutomata parse(string source)
         {
+            // Tokens are separated by whitespace
             var lines = new Regex("\\s+").Split(source.Trim());
 
             var i = 0;
@@ -41,7 +50,7 @@ namespace AutomataConverter
                 transitionMap.Add(new Transition(from, via[0], to));
             }
 
-            return new NonFiniteAutomata(cardinality, validTokens, acceptingStates, startState, transitionMap.GroupBy(t => t.From).ToDictionary(k => k.Key, v => v.AsEnumerable()));
+            return new NonDeterministicFiniteAutomata(cardinality, validTokens, acceptingStates, startState, transitionMap.GroupBy(t => t.From).ToDictionary(k => k.Key, v => v.AsEnumerable()));
         }
     }
 }

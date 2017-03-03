@@ -4,11 +4,15 @@ using System.Linq;
 
 namespace AutomataConverter
 {
+    /// <summary>
+    /// A Deterministic, Finite automata
+    /// </summary>
     public class DeterministicFiniteAutomata : Automata
     {
         public DeterministicFiniteAutomata(int cardinality, string tokens, IEnumerable<int> acceptingStates, int startState, Dictionary<int, IEnumerable<Transition>> transitionMap)
             : base(cardinality, tokens, acceptingStates, startState, transitionMap)
         {
+            // Ensure that the transition map that was provided is deterministic
             foreach(var state in TransitionMap.Keys)
             {
                 if(TransitionMap[state].Count() != ValidTokens.Length)
@@ -19,6 +23,10 @@ namespace AutomataConverter
 
     public static class NonFiniteAutomataExtensions
     {
+        /// <summary>
+        /// A collection of states. Basically a list where <code>.Equals</code> checks
+        /// that the two lists contain the same elements
+        /// </summary>
         private class StateSet : List<int>
         {
             public StateSet(IEnumerable<int> states) : base(states)
@@ -38,10 +46,24 @@ namespace AutomataConverter
             }
         }
 
+        /// <summary>
+        /// An intermediate transition used when building the DFA
+        /// </summary>
         private class IntermediateTransition
         {
+            /// <summary>
+            /// The set of states the transition starts from
+            /// </summary>
             public readonly StateSet From;
+
+            /// <summary>
+            /// The token that activates the transition
+            /// </summary>
             public readonly char Via;
+
+            /// <summary>
+            /// The set of states the transition maps to
+            /// </summary>
             public readonly StateSet To;
 
             internal IntermediateTransition(StateSet from, char via, StateSet to)
@@ -52,18 +74,25 @@ namespace AutomataConverter
             }
         }
 
-        public static DeterministicFiniteAutomata convertToDFA(this NonFiniteAutomata nfa)
+        /// <summary>
+        /// Converts the NFA to DFA using repeated subset construction
+        /// </summary>
+        /// <param name="nfa">the NFA to convert</param>
+        /// <returns>A deterministic, finite automata</return>
+        public static DeterministicFiniteAutomata convertToDFA(this NonDeterministicFiniteAutomata nfa)
         {
             var newStartState = new StateSet(new List<int>{nfa.StartState});
             var visitedSets = new List<StateSet>();
             var toInspect = new Stack<StateSet>();
 
+            // Start at the start state
             toInspect.Push(newStartState);
 
             var intermediateTransitions = new List<IntermediateTransition>();
 
-            do
+            do // while there are more states to inspect
             {
+                // Mark this set as visited
                 var set = toInspect.Pop();
                 visitedSets.Add(set);
 
@@ -82,6 +111,7 @@ namespace AutomataConverter
                     var toState = new StateSet(reachableStates.Distinct());
                     if(!visitedSets.Contains(toState)) toInspect.Push(toState);
 
+                    // Map the transition
                     intermediateTransitions.Add(new IntermediateTransition(set, c, toState));
                 }
             }while(toInspect.Count > 0);

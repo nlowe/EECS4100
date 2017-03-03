@@ -22,7 +22,7 @@ namespace AutomataConverter
             try
             {
                 var nfaSource = File.ReadAllText(args[0]).Trim();
-                var nfa = NonFiniteAutomata.parse(nfaSource);
+                var nfa = NonDeterministicFiniteAutomata.parse(nfaSource);
 
                 if(args.Length == 2 && args[1].ToLower() == "-v")
                 {

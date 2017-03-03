@@ -5,7 +5,7 @@ namespace AutomataConverter.Tests
 {
     public class ComplexDFAFixture
     {
-        public readonly NonFiniteAutomata NFA;
+        public readonly NonDeterministicFiniteAutomata NFA;
         public readonly DeterministicFiniteAutomata DFA;
         public readonly string NFASource = @"
 4
@@ -25,7 +25,7 @@ ab
 
         public ComplexDFAFixture()
         {
-            NFA = NonFiniteAutomata.parse(NFASource);
+            NFA = NonDeterministicFiniteAutomata.parse(NFASource);
             DFA = NFA.convertToDFA();
         }
     }

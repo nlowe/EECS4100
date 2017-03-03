@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace AutomataConverter.Tests
 {
-    public class NonFiniteAutomataFixture
+    public class NonDeterministicFiniteAutomataFixture
     {
-        public readonly NonFiniteAutomata NFA;
+        public readonly NonDeterministicFiniteAutomata NFA;
         public readonly string Source = @"
 3
 ab
@@ -29,17 +29,17 @@ ab
 1 b 2
 ".Trim();
 
-        public NonFiniteAutomataFixture()
+        public NonDeterministicFiniteAutomataFixture()
         {
-            NFA = NonFiniteAutomata.parse(Source);
+            NFA = NonDeterministicFiniteAutomata.parse(Source);
         }
     }
 
-    public class NonFiniteAutomataTests : IClassFixture<NonFiniteAutomataFixture>
+    public class NonDeterministicFiniteAutomataTests : IClassFixture<NonDeterministicFiniteAutomataFixture>
     {
-        private readonly NonFiniteAutomataFixture sut;
+        private readonly NonDeterministicFiniteAutomataFixture sut;
 
-        public NonFiniteAutomataTests(NonFiniteAutomataFixture fixture)
+        public NonDeterministicFiniteAutomataTests(NonDeterministicFiniteAutomataFixture fixture)
         {
             sut = fixture;
         }
@@ -97,7 +97,7 @@ ab
 1 b 2
 ".Trim();
 
-            var nfa = NonFiniteAutomata.parse(Source);
+            var nfa = NonDeterministicFiniteAutomata.parse(Source);
 
             Assert.Equal(1, nfa.AcceptingStates.Count());
             Assert.Equal(2, nfa.AcceptingStates.First());
