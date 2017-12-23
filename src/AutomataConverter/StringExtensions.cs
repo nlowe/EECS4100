@@ -1,4 +1,4 @@
-namespace AutomataConverter.Tests
+namespace AutomataConverter
 {
     public static class StringExtensions
     {
@@ -10,8 +10,7 @@ namespace AutomataConverter.Tests
         /// <returns>a string with all line endings matching the specified style</returns>
         public static string NormalizeLineEndingsTo(this string input, LineEndingStyle style)
         {
-            if(style == LineEndingStyle.LF) return input.Replace("\r\n", "\n");
-            else return input.Replace("\n", "\r\n");
+            return style == LineEndingStyle.LF ? input.Replace("\r\n", "\n") : input.Replace("\n", "\r\n");
         }
     }
 }
